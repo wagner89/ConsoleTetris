@@ -25,11 +25,13 @@ Just a bit of space to practice good manners and thoughtful coding... and fun, o
 &nbsp;
 ##### 8. Maybe fiddle with making it multiplayer over the internet (sounds like fun, haven't done MP logic before)
 * Split screen with two tetris fields, increasing the gravity of the opponent when completing a row
+
 ##### 9. VoiP support?
 &nbsp;
 ##### 10. AI for same MP gameplay against PC
 * Try to make the PC learn to play using a neural network approach (see. Mario example online)
 &nbsp;
+
 ##### 11. Retire
 &nbsp;
 ## Current issues
