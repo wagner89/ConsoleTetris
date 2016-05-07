@@ -1,4 +1,7 @@
-﻿namespace ConsoleTetris.GameLogic
+﻿using System;
+using System.Collections.Generic;
+
+namespace ConsoleTetris.GameLogic
 {
     public class BouncingBall
     {
@@ -8,88 +11,79 @@
         private readonly int _screenHeight;
         private readonly int _screenWidth;
 
-        private int _x = 1;
-        private int _xDirection = 1;
-
-        private int _y = 1;
-        private int _yDirection = 1;
-
         public BouncingBall(int screenWidth, int screenHeight)
         {
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
         }
 
-        public int X
-        {
-            get { return _x; }
-            set
-            {
-                PreviousX = _x;
-                _x = value;
-            }
-        }
+        public int X { get; set; } = 1;
 
-        public int Y
-        {
-            get { return _y; }
-            set
-            {
-                PreviousY = _y;
-                _y = value;
-            }
-        }
+        public int Y { get; set; } = 1;
+
+        public int XDirection { get; set; } = 1;
+
+        public int YDirection { get; set; } = 1;
+
+        public int Speed { get; set; } = 1;
 
         public void MoveToNextPosition()
         {
-            UpdatePosition();
+            PreviousX = X;
+            PreviousY = Y;
+
+            for (var i = 0; i < Speed; i++) MoveOnePosition();
         }
 
-        private void UpdatePosition()
+        private void MoveOnePosition()
         {
-            switch (_xDirection)
+            switch (XDirection)
             {
                 case 1:
-                    {
-                        if (X + 2 >= _screenWidth)
-                        {
-                            _xDirection *= -1;
-                        }
-                        X += _xDirection;
-                        break;
-                    }
+                    if (X + 2 >= _screenWidth) XDirection *= -1;
+                    break;
+
                 case -1:
-                    {
-                        if (X - 2 < 0)
-                        {
-                            _xDirection *= -1;
-                        }
-                        X += _xDirection;
-                        break;
-                    }
+                    if (X - 2 < 0) XDirection *= -1;
+                    break;
             }
 
-            switch (_yDirection)
+            switch (YDirection)
             {
                 case 1:
-                    {
-                        if (Y + 2 >= _screenHeight)
-                        {
-                            _yDirection *= -1;
-                        }
-                        Y += _yDirection;
-                        break;
-                    }
+                    if (Y + 2 >= _screenHeight) YDirection *= -1;
+                    break;
+
                 case -1:
-                    {
-                        if (Y - 2 < 0)
-                        {
-                            _yDirection *= -1;
-                        }
-                        Y += _yDirection;
-                        break;
-                    }
+                    if (Y - 2 < 0)
+                        YDirection *= -1;
+                    break;
             }
+
+            X += XDirection;
+            Y += YDirection;
+        }
+
+        public static List<BouncingBall> SetupBouncingBalls(int numberOfBalls)
+        {
+            var bouncingBalls = new List<BouncingBall>();
+            var rng = new Random();
+
+            for (var i = 0; i < numberOfBalls; i++)
+                bouncingBalls.Add(new BouncingBall(Console.WindowWidth, Console.WindowHeight));
+
+            foreach (var ball in bouncingBalls)
+            {
+                ball.X = 2 + rng.Next(Console.WindowWidth - 4);
+                ball.Y = 2 + rng.Next(Console.WindowHeight - 4);
+
+                ball.XDirection = rng.Next() % 2 == 0 ? 1 : -1;
+                ball.YDirection = rng.Next() % 2 == 0 ? 1 : -1;
+
+                ball.Speed = 1 + rng.Next(4);
+            }
+
+            return bouncingBalls;
         }
     }
 }
