@@ -8,30 +8,8 @@ namespace ConsoleTetris.ScreenUtilities
     /// <summary>
     /// Contains native methods imported as unmanaged code.
     /// </summary>
-    internal static class DllImports
+    public static class DllImports
     {
-        [StructLayout(LayoutKind.Sequential)]
-        public struct COORD
-        {
-            public short X;
-            public short Y;
-
-            public COORD(short x, short y)
-            {
-                this.X = x;
-                this.Y = y;
-            }
-        }
-
-        [DllImport("kernel32.dll")]
-        public static extern IntPtr GetStdHandle(int handle);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool SetConsoleDisplayMode(IntPtr ConsoleOutput, uint Flags, out COORD NewScreenBufferDimensions);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool WriteConsoleOutputCharacter(SafeFileHandle hConsoleOutput, string lpCharacter, int nLength, COORD dwWriteCoord, ref int lpumberOfCharsWritten);
-
         [DllImport("Kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern SafeFileHandle CreateFile(string fileName,
                                                         [MarshalAs(UnmanagedType.U4)] uint fileAccess,
@@ -40,5 +18,64 @@ namespace ConsoleTetris.ScreenUtilities
                                                         [MarshalAs(UnmanagedType.U4)] FileMode creationDisposition,
                                                         [MarshalAs(UnmanagedType.U4)] int flags,
                                                         IntPtr template);
+
+        [DllImport("kernel32.dll")]
+        public static extern IntPtr GetStdHandle(int handle);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool SetConsoleDisplayMode(IntPtr consoleOutput, uint flags, out Coord newScreenBufferDimensions);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool WriteConsoleOutputCharacter(SafeFileHandle hConsoleOutput, string lpCharacter, int nLength, Coord dwWriteCoord, ref int lpumberOfCharsWritten);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern bool WriteConsoleOutput(
+            SafeFileHandle hConsoleOutput,
+            CharInfo[] lpBuffer,
+            Coord dwBufferSize,
+            Coord dwBufferCoord,
+            ref SmallRect lpWriteRegion);
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct CharInfo
+        {
+            [FieldOffset(0)]
+            public CharUnion Char;
+
+            [FieldOffset(2)]
+            public short Attributes;
+        }
+
+        [StructLayout(LayoutKind.Explicit)]
+        public struct CharUnion
+        {
+            [FieldOffset(0)]
+            public char UnicodeChar;
+
+            [FieldOffset(0)]
+            public byte AsciiChar;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct Coord
+        {
+            public short X;
+            public short Y;
+
+            public Coord(short x, short y)
+            {
+                X = x;
+                Y = y;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct SmallRect
+        {
+            public short Left;
+            public short Top;
+            public short Right;
+            public short Bottom;
+        }
     }
 }
