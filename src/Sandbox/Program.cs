@@ -1,24 +1,46 @@
-﻿using ConsoleTetris.ScreenUtilities;
+﻿using ConsoleTetris.GameClock;
+using ConsoleTetris.GameLogic;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+using static ConsoleTetris.ScreenUtilities.ConsoleManager;
 
 namespace ConsoleTetris
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main()
         {
-            ConsoleManager.SetConsoleToFullScreen();
+            BouncingBall bouncingBall;
+            IDisposable gameCycleSubscription = null;
 
-            ConsoleManager.DrawBoder();
-            ConsoleManager.Draw(236, 66, '#');
+            try
+            {
+                HideCursor();
+                SetConsoleToFullScreen();
+                DrawBoder();
 
-            Console.ReadKey();
+                bouncingBall = new BouncingBall(Console.WindowWidth, Console.WindowHeight);
+
+                gameCycleSubscription = GameCycle.GameCycleObservable.Subscribe(_ => UpdateGameState(bouncingBall));
+
+                Console.ReadKey();
+            }
+            finally
+            {
+                gameCycleSubscription?.Dispose();
+            }
+        }
+
+        private static void UpdateGameState(BouncingBall ball)
+        {
+            ball.MoveToNextPosition();
+            DrawGameState(ball);
+        }
+
+        private static void DrawGameState(BouncingBall ball)
+        {
+            DrawToBuffer(ball.PreviousX, ball.PreviousY, ' ');
+            DrawToBuffer(ball.X, ball.Y, '@');
+            BlitBufferToScreen();
         }
     }
 }
