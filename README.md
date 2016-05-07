@@ -4,9 +4,10 @@ Just a bit of space to practice good manners and thoughtful coding... and fun, o
 #### Some of the stuff I want to try here
 
 ##### 1. Solve the following using RX:
-* Game engine clock with observable from interval (running main cycle on subscription to it)
+* Game engine clock with observable from interval (running main cycle on subscription to it) [X]
 * Keyboard input buffered and read using a stream
 * Pushing game-state to be renderd via a stream to the rendering component
+* Check correct usage of schedulers (separate logic and UI refresh)
 
 ##### 2. Implement minimalistic physics (although not really needed for tetris)
 * Make objects have both position and velocity (horizontal and vertical)
@@ -35,5 +36,5 @@ Just a bit of space to practice good manners and thoughtful coding... and fun, o
 ##### 11. Retire
 &nbsp;
 ## Current issues
-Workin on making an API to correctly double buffered the console window, based on [this article](https://code.msdn.microsoft.com/windowsdesktop/C-Console-Double-Buffer-adc31032)
-So far I can get a correct handle on the screen buffer, but blitting seems to be a bit off (as in not working at all)
+~~Workin on making an API to correctly double buffered the console window, based on [this article](https://code.msdn.microsoft.com/windowsdesktop/C-Console-Double-Buffer-adc31032)
+So far I can get a correct handle on the screen buffer, but blitting seems to be a bit off (as in not working at all)~~
