@@ -1,6 +1,8 @@
 ﻿using ConsoleTetris.GameClock;
 using ConsoleTetris.GameLogic;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using static ConsoleTetris.ScreenUtilities.ConsoleManager;
 
 namespace ConsoleTetris
@@ -9,7 +11,6 @@ namespace ConsoleTetris
     {
         private static void Main()
         {
-            BouncingBall bouncingBall;
             IDisposable gameCycleSubscription = null;
 
             try
@@ -18,9 +19,9 @@ namespace ConsoleTetris
                 SetConsoleToFullScreen();
                 DrawBoder();
 
-                bouncingBall = new BouncingBall(Console.WindowWidth, Console.WindowHeight);
+                var bouncingBalls = BouncingBall.SetupBouncingBalls(10);
 
-                gameCycleSubscription = GameCycle.GameCycleObservable.Subscribe(_ => UpdateGameState(bouncingBall));
+                gameCycleSubscription = GameCycle.GameCycleObservable.Subscribe(_ => UpdateGameState(bouncingBalls));
 
                 Console.ReadKey();
             }
@@ -30,16 +31,20 @@ namespace ConsoleTetris
             }
         }
 
-        private static void UpdateGameState(BouncingBall ball)
+        private static void UpdateGameState(List<BouncingBall> balls)
         {
-            ball.MoveToNextPosition();
-            DrawGameState(ball);
+            balls.ForEach(ball => ball.MoveToNextPosition());
+            DrawGameState(balls);
         }
 
-        private static void DrawGameState(BouncingBall ball)
+        private static void DrawGameState(IEnumerable<BouncingBall> balls)
         {
-            DrawToBuffer(ball.PreviousX, ball.PreviousY, ' ');
-            DrawToBuffer(ball.X, ball.Y, '@');
+            foreach (var ball in balls)
+            {
+                DrawToBuffer(ball.PreviousX, ball.PreviousY, ' ');
+                DrawToBuffer(ball.X, ball.Y, 'o');
+            }
+
             BlitBufferToScreen();
         }
     }
